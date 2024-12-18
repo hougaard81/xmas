@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap" rel="stylesheet">
+  <title>CodeCartel.dk - Glædelig Jul</title>
+  <style>
+     body {
+      margin: 0;
+      padding: 0;
+      background: #0a192f; /* fallback background */
+      overflow-x: hidden;
+    }
+    .tree-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      background: linear-gradient(135deg, #0a192f, #112240);
+      padding: 50px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .tree-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(at 50% 20%, rgba(255,255,255,0.1), transparent 50%);
+      z-index: 0;
+    }
+
+    @keyframes moveGlow {
+      0% {
+        transform: translateX(-5%) translateY(-5%);
+      }
+      100% {
+        transform: translateX(5%) translateY(5%);
+      }
+    }
+
+    /* Snow particles */
+    .particle {
+      position: absolute;
+      top: -10px;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fall linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translate(calc(var(--drift) * 1px), 400px);
+        opacity: 0;
+      }
+    }
+
+    .tree-section {
+      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+      transition: all 0.5s ease;
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+      transform-origin: bottom center;
+    }
+
+    /* Add hover effect to the entire SVG */
+    svg:hover .tree-section {
+      transform: scale(1.02);
+      filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.5));
+    }
+
+    .star {
+      filter: drop-shadow(0 0 15px rgba(255, 223, 100, 0.8));
+      animation: starGlow 3s ease-in-out infinite alternate;
+      transition: all 0.5s ease;
+    }
+
+    svg:hover .star {
+      filter: drop-shadow(0 0 25px rgba(255, 223, 100, 1));
+      transform-origin: center;
+    }
+
+    .light {
+      animation: modernTwinkle 4s infinite;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9));
+      cursor: pointer;
+      transition: all 0.5s ease;
+    }
+
+    /* Modify the hover state for lights */
+    svg:hover .light {
+      animation: none;
+      opacity: 1;
+      r: 3;
+      fill: #ffffff;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1));
+    }
+
+    /* Stagger the light brightening effect */
+    svg:hover .light:nth-child(2n) {
+      r: 2.8;
+      fill: #fff5d4;
+    }
+
+    svg:hover .light:nth-child(3n) {
+      r: 3.2;
+      fill: #fffbf0;
+    }
+
+    /* Enhanced trunk effect on hover */
+    svg:hover path[fill="url(#trunkGradient)"] {
+      filter: brightness(1.2);
+    }
+
+    svg {
+      transition: transform 0.5s ease;
+    }
+
+    .light:nth-child(2n) { animation-delay: 0.8s; }
+    .light:nth-child(3n) { animation-delay: 1.6s; }
+    .light:nth-child(4n) { animation-delay: 2.4s; }
+
+    @keyframes modernTwinkle {
+      0%, 100% {
+        opacity: 0.4;
+        fill: #fff5d4;
+        r: 1.5;
+      }
+      50% {
+        opacity: 1;
+        fill: #ffffff;
+        r: 2.5;
+      }
+    }
+
+    @keyframes starGlow {
+      from {
+        fill: #ffd700;
+        filter: drop-shadow(0 0 10px rgba(255, 223, 100, 0.6));
+      }
+      to {
+        fill: #fff5d4;
+        filter: drop-shadow(0 0 20px rgba(255, 223, 100, 0.9));
+      }
+    }
+
+    /* Christmas message styling with new floating animation */
+    .christmas-message-container {
+      position: absolute;
+      left: 10%;
+      text-align: center;
+    }
+
+    .christmas-message,
+    .secondary-message {
+      font-family: "Mountains of Christmas", serif;
+      font-weight: 700;
+      font-style: normal;
+      margin-top: 20px;
+      font-size: 48px;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      white-space: pre;
+      transition: opacity 0.5s ease;
+    }
+
+    .secondary-message {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .christmas-message-container:hover .christmas-message {
+      opacity: 0;
+    }
+
+    .christmas-message-container:hover .secondary-message {
+      opacity: 1;
+    }
+
+    .floating-letter {
+      display: inline-block;
+      animation: floatingText 3s ease-in-out infinite;
+    }
+
+    /* Space character style */
+    .space {
+      display: inline-block;
+      width: 0.3em; /* Adjusts space width */
+    }
+
+    @keyframes floatingText {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="tree-container" id="treeContainer">
+    <div class="snow-layer"></div>
+    <svg viewBox="0 0 300 400" width="300" height="400">
+      <defs>
+        <!-- Subtle noise filter -->
+        <filter id="noiseFilter" x="0" y="0" width="1" height="1" filterUnits="objectBoundingBox">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="1" result="noise"/>
+          <feBlend in="SourceGraphic" in2="noise" mode="soft-light"/>
+        </filter>
+
+        <linearGradient id="treeGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0f5132" />
+          <stop offset="50%" stop-color="#165c39" />
+          <stop offset="100%" stop-color="#1a6540" />
+        </linearGradient>
+
+        <linearGradient id="treeGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#15803d" />
+          <stop offset="50%" stop-color="#166534" />
+          <stop offset="100%" stop-color="#14532d" />
+        </linearGradient>
+
+        <linearGradient id="treeGradient3" x1="50%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%" stop-color="#22c55e" />
+          <stop offset="100%" stop-color="#16a34a" />
+        </linearGradient>
+
+        <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#442926" />
+          <stop offset="50%" style="stop-color:#57433f" />
+          <stop offset="100%" style="stop-color:#442926" />
+        </linearGradient>
+      </defs>
+
+      <ellipse cx="150" cy="380" rx="80" ry="12" fill="rgba(0,0,0,0.25)">
+        <animate attributeName="ry" values="12;10;12" dur="3s" repeatCount="indefinite" />
+      </ellipse>
+
+      <path d="M135 300 Q142 330 150 360 Q158 330 165 300" fill="url(#trunkGradient)" />
+
+      <!-- Apply noise filter directly here -->
+      <g class="tree-section" filter="url(#noiseFilter)">
+        <!-- Back layer -->
+        <path d="M150 40 L240 170 L60 170 Z" fill="url(#treeGradient1)" />
+        <path d="M150 120 L255 250 L45 250 Z" fill="url(#treeGradient1)" />
+        <path d="M150 200 L270 300 L30 300 Z" fill="url(#treeGradient1)" />
+        
+        <!-- Middle layer -->
+        <path d="M150 60 L230 160 L70 160 Z" fill="url(#treeGradient2)" />
+        <path d="M150 130 L245 240 L55 240 Z" fill="url(#treeGradient2)" />
+        <path d="M150 210 L260 290 L40 290 Z" fill="url(#treeGradient2)" />
+        
+        <!-- Front layer -->
+        <path d="M150 220 L250 280 L50 280 Z" fill="url(#treeGradient3)" />
+        <path d="M150 140 L235 230 L65 230 Z" fill="url(#treeGradient3)" />
+        <path d="M150 60 L220 150 L80 150 Z" fill="url(#treeGradient3)" />
+      </g>
+
+      <!-- Lights -->
+      <g class="lights">
+        <circle class="light" cx="150" cy="90" r="2" />
+        <circle class="light" cx="130" cy="120" r="2" />
+        <circle class="light" cx="170" cy="120" r="2" />
+        <circle class="light" cx="110" cy="160" r="2" />
+        <circle class="light" cx="150" cy="160" r="2" />
+        <circle class="light" cx="190" cy="160" r="2" />
+        <circle class="light" cx="90" cy="200" r="2" />
+        <circle class="light" cx="130" cy="200" r="2" />
+        <circle class="light" cx="170" cy="200" r="2" />
+        <circle class="light" cx="210" cy="200" r="2" />
+        <circle class="light" cx="70" cy="240" r="2" />
+        <circle class="light" cx="110" cy="240" r="2" />
+        <circle class="light" cx="150" cy="240" r="2" />
+        <circle class="light" cx="190" cy="240" r="2" />
+        <circle class="light" cx="230" cy="240" r="2" />
+      </g>
+
+      <!-- Star on top of the tree -->
+      <path class="star" d="M150 20 L158 45 L185 45 L163 62 L172 87 L150 70 L128 87 L137 62 L115 45 L142 45 Z" />
+    </svg>
+    <div class="christmas-message-container">
+      <div class="christmas-message">Glædelig Jul fra CodeCartel.dk</div>
+      <div class="secondary-message">God Jul og Godt Nytår! 🎄✨</div>
+    </div>
+  </div>
+
+  <script>
+    const MAX_PARTICLES = 100;
+    let currentParticles = 0;
+
+    function createParticle() {
+      if (currentParticles >= MAX_PARTICLES) return;
+
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.setProperty('--drift', Math.random() * 100 - 50);
+      particle.style.animationDuration = Math.random() * 3 + 2 + 's';
+
+      const container = document.getElementById('treeContainer');
+      container.appendChild(particle);
+      currentParticles++;
+
+      particle.addEventListener('animationend', () => {
+        particle.remove();
+        currentParticles--;
+      });
+    }
+
+    // Create particles periodically
+    setInterval(createParticle, 100);
+
+    // Text animation setup
+    const messageElements = document.querySelectorAll('.christmas-message, .secondary-message');
+    
+    messageElements.forEach(messageElement => {
+      const text = messageElement.textContent;
+      messageElement.textContent = '';
+
+      [...text].forEach((char, index) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.className = 'floating-letter';
+        span.style.animationDelay = `${index * 0.1}s`;
+        messageElement.appendChild(span);
+      });
+    });
+
+    // Subtle light hover effect
+    document.querySelectorAll('.light').forEach(light => {
+      light.addEventListener('mouseover', () => {
+        light.style.filter = 'drop-shadow(0 0 8px rgba(255, 255, 255, 1))';
+        light.style.cursor = 'pointer';
+      });
+      light.addEventListener('mouseout', () => {
+        light.style.filter = '';
+      });
+    });
+  </script>
+</body>
+</html>
